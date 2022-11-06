@@ -193,10 +193,12 @@ class BroadcastTo(TensorOp):
         for i in range(len(output_shape) - len(input_shape)):
           grad = summation(grad, axes=0)
         
+        self.reduce_dim = []
         for i, dim in enumerate(input_shape):
-            if dim == 1:
-              grad = summation(grad, axes=i)
-        return reshape(grad, input_shape)
+          if dim == 1:
+            self.reduce_dim.append(i)
+        
+        return reshape(summation(grad, tuple(self.reduce_dim)), input_shape)
         ### END YOUR SOLUTION
 
 
