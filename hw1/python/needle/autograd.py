@@ -402,14 +402,12 @@ def compute_gradient_of_variables(output_tensor, out_grad):
     for node in reverse_topo_order:
         adjoint = node_to_output_grads_list[node]
         v_i = sum(adjoint)
-        assert (node.shape == v_i.shape)
         node.grad = v_i
 
         if node.op is None:
             continue
         v_ki_list = node.op.gradient_as_tuple(v_i, node)
         for ipt, v_ki in zip(node.inputs, v_ki_list):
-            assert (ipt.shape == v_ki.shape)
             node_to_output_grads_list.setdefault(ipt, list())
             node_to_output_grads_list[ipt].append(v_ki)
 
